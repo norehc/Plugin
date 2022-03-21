@@ -43,19 +43,31 @@ public class InventoryClickNPC  implements Listener {
              */
             if(e.getCurrentItem().getType() == Material.NAME_TAG) {
                 e.getWhoClicked().closeInventory();
-                if(Main.getMain().getWaitingChatMessage().indexOf(player) != -1) {
-
+                player.sendMessage("§6Donner un nouveau nom au NPC");
+                if(Main.getMain().getWaitingChatMessagePlayer().indexOf(player) != -1) {
+                    Main.getMain().getWaitingChatMessageAction().remove(Main.getMain().getWaitingChatMessagePlayer().indexOf(player));
+                    Main.getMain().getWaitingChatMessagePlayer().remove(player);
+                    Main.getMain().getWaitingChatMessageNPC().remove(npc);
                 }
-                player.sendMessage("Donner un nouveau nom au NPC");
-                if(Main.getMain().getWaitingChatMessage().indexOf(player) != -1) {
-                    Main.getMain().getWaitingChatMessage().remove(player);
-                }
-                Main.getMain().getWaitingChatMessage().add(player);
+                Main.getMain().getWaitingChatMessagePlayer().add(player);
+                Main.getMain().getWaitingChatMessageNPC().add(npc);
+                Main.getMain().getWaitingChatMessageAction().add("name");
             }else if(e.getCurrentItem().getType() == Material.BOOK) {
 
                 e.getWhoClicked().closeInventory();
             }else if(e.getCurrentItem().getType() == Material.BARRIER) {
                 choiseDeleteNPC(player, npcName);
+            }else if(e.getCurrentItem().getType() == Material.PLAYER_HEAD){
+                e.getWhoClicked().closeInventory();
+                player.sendMessage("§6Donner le nom du joueur à qui appartient le skin");
+                if(Main.getMain().getWaitingChatMessagePlayer().indexOf(player) != -1) {
+                    Main.getMain().getWaitingChatMessageAction().remove(Main.getMain().getWaitingChatMessagePlayer().indexOf(player));
+                    Main.getMain().getWaitingChatMessagePlayer().remove(player);
+                    Main.getMain().getWaitingChatMessageNPC().remove(npc);
+                }
+                Main.getMain().getWaitingChatMessagePlayer().add(player);
+                Main.getMain().getWaitingChatMessageNPC().add(npc);
+                Main.getMain().getWaitingChatMessageAction().add("skin");
             }
         }else if(e.getView().getTitle().contains("§6Confirmer la suppression du NPC")) {
             e.setCancelled(true);

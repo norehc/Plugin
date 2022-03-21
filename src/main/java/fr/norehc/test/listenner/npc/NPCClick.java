@@ -42,7 +42,8 @@ public class NPCClick implements Listener {
                 inventory = GestionInv.createInventory(27, inventory, GestionInv.newItem(Material.GRAY_STAINED_GLASS_PANE, 1, " "));
 
                 inventory.setItem(10, GestionInv.newItem(Material.NAME_TAG, 1, "§8Changer le nom du NPC", Arrays.asList("§7Nom actuel :" + npc1.getName())));
-                inventory.setItem(13, GestionInv.newItem(Material.BOOK, 1, "§8Changer la fonction du NPC", Arrays.asList("§7Fonction actuel : " + npc1.getFunction())));
+                inventory.setItem(12, GestionInv.newItem(GestionInv.newSkullItem(npc1.getName()), "§8Changer le skin du NPC", Arrays.asList("§7Skin actuel : " + npc1.getSkinName())));
+                inventory.setItem(14, GestionInv.newItem(Material.BOOK, 1, "§8Changer la fonction du NPC", Arrays.asList("§7Fonction actuel : " + npc1.getFunction())));
                 inventory.setItem(16, GestionInv.newItem(Material.BARRIER, 1, "§4Supprimer le NPC"));
 
                 player.openInventory(inventory);

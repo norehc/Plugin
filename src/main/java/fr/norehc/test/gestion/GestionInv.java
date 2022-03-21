@@ -1,11 +1,14 @@
 package fr.norehc.test.gestion;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,6 +103,14 @@ public class GestionInv {
         meta.setLore(lore);
         if(ench == true) meta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
         if(hide == true) meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public static ItemStack newSkullItem(String playerName) {
+        ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        meta.setOwningPlayer(Bukkit.getOfflinePlayer(playerName));
         item.setItemMeta(meta);
         return item;
     }

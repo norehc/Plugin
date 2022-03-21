@@ -15,6 +15,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -52,7 +53,9 @@ public class Main extends JavaPlugin {
 
 	private PermissionManager permissionManager = new PermissionManager();
 
-	private List<Player> waitingChatMessage = new ArrayList<>();
+	private List<Player> waitingChatMessagePlayer = new ArrayList<>();
+	private List<ServerPlayer> waitingChatMessageNPC = new ArrayList<>();
+	private List<String> waitingChatMessageAction = new ArrayList<>();
 	
 	
 	@Override
@@ -184,7 +187,15 @@ public class Main extends JavaPlugin {
 		return permissionManager;
 	}
 
-	public List<Player> getWaitingChatMessage() {
-		return waitingChatMessage;
+	public List<Player> getWaitingChatMessagePlayer() {
+		return waitingChatMessagePlayer;
+	}
+
+	public List<ServerPlayer> getWaitingChatMessageNPC() {
+		return waitingChatMessageNPC;
+	}
+
+	public List<String> getWaitingChatMessageAction() {
+		return waitingChatMessageAction;
 	}
 }

@@ -4,10 +4,10 @@ import jline.internal.Nullable;
 
 public class NPC {
     private double posX, posY, posZ;
-    private String name, world, skin, signature, oldName, function;
+    private String name, world, skin, signature, oldName, function, skinName;
     private Boolean isNew, exist;
 
-    public NPC(double posX, double posY, double posZ, String name, String world, String skin, String signature, Boolean isNew, String function) {
+    public NPC(double posX, double posY, double posZ, String name, String world, String skin, String signature, Boolean isNew, String function, String skinName) {
         this.posX = posX;
         this.posY = posY;
         this.posZ = posZ;
@@ -19,6 +19,7 @@ public class NPC {
         this.exist = true;
         this.oldName = name;
         this.function = function;
+        this.skinName = skinName;
     }
 
     public double getPosX() {
@@ -93,6 +94,10 @@ public class NPC {
         return oldName;
     }
 
+    public void setOldName(String oldName) {
+        this.oldName = oldName;
+    }
+
     public void setFunction(String function) {
         this.function = function;
     }
@@ -101,4 +106,7 @@ public class NPC {
         return function;
     }
 
+    public String getSkinName() {
+        return skinName;
+    }
 }
