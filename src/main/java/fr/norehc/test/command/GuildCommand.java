@@ -1,5 +1,6 @@
 package fr.norehc.test.command;
 
+import fr.norehc.test.npc.NPC;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -7,6 +8,8 @@ import org.bukkit.entity.Player;
 
 import fr.norehc.test.main.Main;
 import fr.norehc.test.npc.NPCManager;
+
+import java.util.Optional;
 
 public class GuildCommand implements CommandExecutor {
 	
@@ -21,9 +24,33 @@ public class GuildCommand implements CommandExecutor {
 		//args[0] -> name du npc
 		//args[1] -> name du joueur auquel appartient la texture
 		if(args.length == 0) {
-			NPCManager.createNPC((Player) sender);
+			Optional<NPC> npc = main.getDataNPC().stream().filter(npc1 -> {
+				return npc1.getName().equals(((Player) sender).getName());
+			}).findFirst();
+			if(npc.isPresent()) {
+				if(!npc.get().exist()) {
+					NPCManager.deleteNPC(Main.getMain().getNPC().get(Main.getMain().getDataNPC().indexOf(npc.get())));
+					NPCManager.createNPC((Player) sender);
+				}else {
+					((Player) sender).sendMessage("§4Ce nom est déjà pris !");
+				}
+			}else {
+				NPCManager.createNPC((Player) sender);
+			}
 		}else {
-			NPCManager.createNPC((Player) sender, args[0], (args.length == 2) ? args[1] : ((Player) sender).getName());
+			Optional<NPC> npc = main.getDataNPC().stream().filter(npc1 -> {
+				return npc1.getName().equals(args[0]);
+			}).findFirst();
+			if(npc.isPresent()) {
+				if(!npc.get().exist()) {
+					NPCManager.deleteNPC(Main.getMain().getNPC().get(Main.getMain().getDataNPC().indexOf(npc.get())));
+					NPCManager.createNPC((Player) sender, args[0], (args.length == 2) ? args[1] : ((Player) sender).getName());
+				}else {
+					((Player) sender).sendMessage("§4Ce nom est déjà pris !");
+				}
+			}else {
+				NPCManager.createNPC((Player) sender, args[0], (args.length == 2) ? args[1] : ((Player) sender).getName());
+			}
 		}
 
 		/*

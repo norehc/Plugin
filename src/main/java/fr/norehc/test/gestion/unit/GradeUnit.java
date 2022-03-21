@@ -93,6 +93,13 @@ public enum GradeUnit {
 		return (i == powers.size() - 1) ? role : GradeUnit.getByPower(i + 1);
 	}
 
+	public static boolean isAGrade(String name) {
+		for(GradeUnit g : values()) {
+			if(g.getName().equals(name)) return true;
+		}
+		return false;
+	}
+
 	public static GradeUnit getAfterGrade(GradeUnit grade) {
 		List<Integer> powers = new ArrayList<Integer>();
 

@@ -51,6 +51,8 @@ public class Main extends JavaPlugin {
 	private List<NPC> dataNPC = new ArrayList<>();
 
 	private PermissionManager permissionManager = new PermissionManager();
+
+	private List<Player> waitingChatMessage = new ArrayList<>();
 	
 	
 	@Override
@@ -135,7 +137,7 @@ public class Main extends JavaPlugin {
 		connectionPool.setUrl("jdbc:mysql://163.172.80.63:3306/test?autoReconnect=true");
 		
 		connectionPool.setInitialSize(1);
-        connectionPool.setMaxTotal(10);
+        connectionPool.setMaxTotal(20);
 		
 		mysql = new MySQL(connectionPool);
 		
@@ -180,5 +182,9 @@ public class Main extends JavaPlugin {
 
 	public PermissionManager getPermissionManager() {
 		return permissionManager;
+	}
+
+	public List<Player> getWaitingChatMessage() {
+		return waitingChatMessage;
 	}
 }

@@ -90,6 +90,13 @@ public enum RankUnit {
 		return (i == powers.size() - 1) ? role : RankUnit.getByPower(i + 1);
 	}
 
+	public static boolean isARank(String name) {
+		for(RankUnit r : values()) {
+			if(r.getName().equals(name)) return true;
+		}
+		return false;
+	}
+
 	public static RankUnit getAfterGrade(RankUnit rank) {
 		List<Integer> powers = new ArrayList<Integer>();
 

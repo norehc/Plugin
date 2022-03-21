@@ -1,2 +1,2 @@
 # Project exclude paths
-/target/
+/target/!/src/main/java/fr/norehc/test/listenner/ListenersManager.java

@@ -61,9 +61,10 @@ public class Account extends AbstractData {
 	}
 	
 	public void onLogin(Player player) {
+		main.getLogger().info("Creation de l'account du joueur " + player.getName());
 		main.getAccounts().add(this);
 		String[] data = getDataFromMySQL();
-		
+
 		if(newPlayer) {
 			dataGrade.setGrade(GradeUnit.getLowestGrade());
 			dataRank.setRank(RankUnit.getLowestRank());
@@ -73,22 +74,27 @@ public class Account extends AbstractData {
 			dataRank.setRank(RankUnit.getByName(data[2]));
 			dataMoney.setMoney(Long.parseLong(data[3]));
 		}
+
 		List<Permission> rankPermission = main.getPermissionManager().getRankPermissions(dataRank.getRank());
 		List<Permission> gradePermission = main.getPermissionManager().getGradePermissions(dataGrade.getGrade());
 
 		PermissionAttachment perms = player.addAttachment(main);
 
-		gradePermission.stream().forEach(perm -> {
-			if(!perm.exist()) {
-				perms.setPermission(perm.getPermission(), true);
-			}
-		});
+		if(!gradePermission.isEmpty()) {
+			gradePermission.stream().forEach(perm -> {
+				if (!perm.exist()) {
+					perms.setPermission(perm.getPermission(), true);
+				}
+			});
+		}
 
-		rankPermission.stream().forEach(perm -> {
-			if(!perm.exist()) {
-				perms.setPermission(perm.getPermission(), true);
-			}
-		});
+		if(!rankPermission.isEmpty()) {
+			rankPermission.stream().forEach(perm -> {
+				if (!perm.exist()) {
+					perms.setPermission(perm.getPermission(), true);
+				}
+			});
+		}
 	}
 	
 	public void onLogout() {

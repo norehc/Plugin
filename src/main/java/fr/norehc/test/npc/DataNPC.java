@@ -44,13 +44,15 @@ public class DataNPC {
         for(int i = 0; i < posX.size(); i++) {
             NPCManager.createNPC(name.get(i), world.get(i), posX.get(i), posY.get(i), posZ.get(i), skin.get(i), signature.get(i), false);
         }
+
+        System.out.println("Fin du chargement des NPCs");
     }
 
     public static void saveNPCs() {
         System.out.println("Sauvegarde des NPCs");
         Main.getMain().getDataNPC().stream().forEach(npc -> {
-            System.out.println("Sauvegarde du NPC " + npc.getName() + " en cours");
             if(npc.exist()) {
+                System.out.println("Sauvegarde du NPC " + npc.getName() + " en cours");
                 if(npc.isNew()) {
                     Main.getMain().getMySQL().update(String.format("INSERT INTO npcs (posX, posY, posZ, name, world, skin, signature, function) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )", npc.getPosX(), npc.getPosY(), npc.getPosZ(), npc.getName(), npc.getWorld(), npc.getSkin(), npc.getSignatures(), npc.getFunction()));
                 } else {

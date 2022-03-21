@@ -8,10 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.permissions.PermissionAttachment;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PermissionManager {
     private Map<RankUnit, List<Permission>> rankPermission = new HashMap<>();
@@ -19,11 +16,37 @@ public class PermissionManager {
 
     public void setupPermission() {
         //Get permissions from SQL
-        System.out.println("Début de la recuperation des permissions");
-        System.out.println("Recuperation des permissions de chaque rank");
+        System.out.println("Debut de la recuperation des permissions");
+
+        Arrays.stream(RankUnit.values()).forEach(rank -> {
+            rankPermission.put(rank, new ArrayList<>());
+        });
+
+        Arrays.stream(GradeUnit.values()).forEach(grade -> {
+            gradePermission.put(grade, new ArrayList<>());
+        });
+
+        Main.getMain().getMySQL().query(String.format("SELECT * FROM permissions"), rs -> {
+            try {
+                while(rs.next()) {
+                    String role = rs.getString("role");
+                    Permission perm = new Permission(rs.getString("permission"));
+                    if(RankUnit.isARank(role)) {
+                        rankPermission.get(RankUnit.getByName(role)).add(perm);
+                    }else if(GradeUnit.isAGrade(role)) {
+                        gradePermission.get(GradeUnit.getByName(role)).add(perm);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+        /*System.out.println("Recuperation des permissions de chaque rank");
         for(RankUnit rankUnit : RankUnit.values()) {
+            System.out.println(rankUnit.getName());
             List<Permission> permissions = new ArrayList<>();
             Main.getMain().getMySQL().query(String.format("SELECT * FROM permissions WHERE role='%s'", rankUnit.getName()), rs -> {
+                System.out.println("here");
                 try {
                     while(rs.next()) {
                         permissions.add(new Permission(rs.getString("permission")));
@@ -47,7 +70,7 @@ public class PermissionManager {
                 }
             });
             gradePermission.put(gradeUnit, permissions);
-        }
+        }*/
         System.out.println("Fin de la recuperation des permissions");
     }
 

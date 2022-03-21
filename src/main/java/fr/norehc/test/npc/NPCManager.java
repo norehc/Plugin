@@ -91,6 +91,7 @@ public class NPCManager {
 			connection.send(new ClientboundRemoveEntitiesPacket(npc.getId()));
 		}
 		NPC npc1 = Main.getMain().getDataNPC().get(Main.getMain().getNPC().indexOf(npc));
+		System.out.println(npc1.isNew());
 		if(npc1.isNew()) {
 			Main.getMain().getDataNPC().remove(npc1);
 			Main.getMain().getNPC().remove(npc);
@@ -98,6 +99,11 @@ public class NPCManager {
 			Main.getMain().getDataNPC().get(Main.getMain().getNPC().indexOf(npc)).delete();
 		}
 		//Remove npc from the NPC.java
+	}
+
+	public static void deleteNPC(ServerPlayer npc) {
+		Main.getMain().getDataNPC().remove(Main.getMain().getDataNPC().get(Main.getMain().getNPC().indexOf(npc)));
+		Main.getMain().getNPC().remove(npc);
 	}
 
 	private static GameProfile sendSetNPCSkinPacket(String username, GameProfile gameProfile) { // The username is the name for the player that has the skin.
@@ -117,9 +123,7 @@ public class NPCManager {
 				String signature = reply.substring(indexOfSignature + 14, reply.indexOf("\"", indexOfSignature + 14));
 
 				gameProfile.getProperties().put("textures", new Property("textures", skin, signature));
-			}
-
-			else {
+			} else {
 				Bukkit.getConsoleSender().sendMessage("Connection could not be opened when fetching player skin (Response code " + connection.getResponseCode() + ", " + connection.getResponseMessage() + ")");
 			}
 		} catch (IOException e) {
@@ -128,6 +132,4 @@ public class NPCManager {
 
 		return gameProfile;
 	}
-
-
 }
