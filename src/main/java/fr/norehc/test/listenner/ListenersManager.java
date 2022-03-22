@@ -21,7 +21,7 @@ public class ListenersManager {
 		pm.registerEvents(new PlayerQuit(), main);
 		pm.registerEvents(new PlayerChat(), main);
 		pm.registerEvents(new PlayerMove(), main);
-		pm.registerEvents(new PlayerAsyncChat(), main);
+		pm.registerEvents(new PlayerCommandChat(), main);
 
 		pm.registerEvents(new NPCClick(), main);
 

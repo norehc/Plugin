@@ -4,7 +4,6 @@ import fr.norehc.test.main.Main;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class DataNPC {
@@ -58,12 +57,11 @@ public class DataNPC {
                 if(npc.isNew()) {
                     Main.getMain().getMySQL().update(String.format("INSERT INTO npcs (posX, posY, posZ, name, world, skin, skinName, signature, function) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )", npc.getPosX(), npc.getPosY(), npc.getPosZ(), npc.getName(), npc.getWorld(), npc.getSkin(), npc.getSkinName(), npc.getSignatures(), npc.getFunction()));
                 } else {
-                    Main.getMain().getMySQL().update(String.format("UPDATE npcs SET posX='%s', posY='%s', posZ='%s', name='%s', world='%s', skin='%s', skinName='%s' signature='%s', function='%s' WHERE name='%s'", npc.getPosX(), npc.getPosY(), npc.getPosZ(), npc.getName(), npc.getWorld(), npc.getSkin(), npc.getSkinName(), npc.getSignatures(), npc.getOldName(), npc.getFunction()));
+                    Main.getMain().getMySQL().update(String.format("UPDATE npcs SET posX='%s', posY='%s', posZ='%s', name='%s', world='%s', skin='%s', skinName='%s', signature='%s', function='%s' WHERE name='%s'", npc.getPosX(), npc.getPosY(), npc.getPosZ(), npc.getName(), npc.getWorld(), npc.getSkin(), npc.getSkinName(), npc.getSignatures(), npc.getOldName(), npc.getFunction()));
                 }
             }else {
                 Main.getMain().getMySQL().update(String.format("DELETE FROM npcs WHERE name='%s'", npc.getOldName()));
             }
-
         });
     }
 

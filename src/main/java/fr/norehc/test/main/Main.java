@@ -1,21 +1,11 @@
 package fr.norehc.test.main;
 
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import fr.norehc.test.npc.DataNPC;
-import fr.norehc.test.npc.NPC;
-import fr.norehc.test.packet.PacketReader;
-import fr.norehc.test.permission.PermissionManager;
-import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,8 +18,15 @@ import fr.norehc.test.gestion.unit.GradeUnit;
 import fr.norehc.test.gestion.unit.RankUnit;
 import fr.norehc.test.listenner.ListenersManager;
 import fr.norehc.test.mysql.MySQL;
+import fr.norehc.test.npc.DataNPC;
+import fr.norehc.test.npc.NPC;
+import fr.norehc.test.packet.PacketReader;
+import fr.norehc.test.permission.PermissionManager;
 import fr.norehc.test.scoreboard.ScoreboardTeam;
 import fr.norehc.test.tablist.Tablist;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
 public class Main extends JavaPlugin {
 	

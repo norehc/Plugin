@@ -1,9 +1,5 @@
 package fr.norehc.test.listenner.player;
 
-import fr.norehc.test.packet.PacketReader;
-import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,6 +8,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import fr.norehc.test.gestion.Account;
 import fr.norehc.test.main.Main;
+import fr.norehc.test.packet.PacketReader;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
 public class PlayerQuit implements Listener {
 	

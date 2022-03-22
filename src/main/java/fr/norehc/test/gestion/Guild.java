@@ -1,21 +1,13 @@
 package fr.norehc.test.gestion;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
-
+import fr.norehc.test.gestion.unit.RoleUnit;
+import fr.norehc.test.main.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import fr.norehc.test.gestion.unit.RoleUnit;
-import fr.norehc.test.main.Main;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class Guild {
 	

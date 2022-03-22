@@ -1,40 +1,26 @@
 package fr.norehc.test.npc;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.ServerSocket;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import fr.norehc.test.main.Main;
-import net.minecraft.network.protocol.game.*;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
+import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.craftbukkit.v1_18_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_18_R1.scoreboard.CraftScoreboard;
 import org.bukkit.entity.Player;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import net.minecraft.world.scores.PlayerTeam;
-import net.minecraft.world.scores.Team;
-
 import javax.net.ssl.HttpsURLConnection;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class NPCManager {
 
@@ -44,7 +30,9 @@ public class NPCManager {
 		Property textures = (Property) craftPlayer.getGameProfile().getProperties().get("textures").toArray()[0];
 		GameProfile gameProfile = new GameProfile(UUID.randomUUID(), player.getName());
 		gameProfile.getProperties().put("textures", new Property("textures", textures.getValue(), textures.getSignature()));
-		
+
+		System.out.println(((CraftWorld) player.getWorld()).getHandle());
+
 		execute(gameProfile, (CraftWorld)player.getWorld(), player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), true, player.getName());
 	}
 
@@ -91,7 +79,7 @@ public class NPCManager {
 		
 		Main.getMain().getNPC().add(npc);
 		Main.getMain().getDataNPC().add(new NPC(posX, posY, posZ, gameProfile.getName(), world.getName(), ((Property) gameProfile.getProperties().get("textures").toArray()[0]).getValue(), ((Property) gameProfile.getProperties().get("textures").toArray()[0]).getSignature(), isNew, "none", skinName));
-		return Main.getMain().getDataNPC().indexOf(Main.getMain().getNPC().indexOf(npc));
+		return Main.getMain().getNPC().indexOf(npc);
 	}
 
 	public static void removeNPC(ServerPlayer npc) {
@@ -99,8 +87,7 @@ public class NPCManager {
 			ServerGamePacketListenerImpl connection = ((CraftPlayer) player).getHandle().connection;
 			connection.send(new ClientboundRemoveEntitiesPacket(npc.getId()));
 		}
-		NPC npc1 = Main.getMain().getDataNPC().get(Main.getMain().getNPC().indexOf(npc));
-		System.out.println(npc1.isNew());
+		NPC npc1 = Main.getMain().getDataNPC().get(Main.getMain().getNPC().indexOf(npc));;
 		if(npc1.isNew()) {
 			Main.getMain().getDataNPC().remove(npc1);
 			Main.getMain().getNPC().remove(npc);
@@ -109,16 +96,16 @@ public class NPCManager {
 		}
 	}
 
-	public static void updateNameNPC(ServerPlayer npc, String name) {
+	//Ajouter le fait que le nom peut-etre deja pris et aussi la suppression du NPC doit etre modifier en fonction des variables du NPC
+	public static void updateNameNPC(ServerPlayer npc, String name, boolean isNew) {
 		NPC NPC = Main.getMain().getDataNPC().get(Main.getMain().getNPC().indexOf(npc));
 
 		removeNPC(npc);
-		deleteNPC(npc);
 
 		GameProfile gameProfile = new GameProfile(npc.getUUID(), name);
 		gameProfile.getProperties().put("textures", new Property("textures", NPC.getSkin(), NPC.getSignatures()));
 
-		int i = execute(gameProfile, (CraftWorld) Bukkit.getWorld(NPC.getWorld()), NPC.getPosX(), NPC.getPosY(), NPC.getPosZ(), false, NPC.getSkinName());
+		int i = execute(gameProfile, (CraftWorld) Bukkit.getWorld(NPC.getWorld()), NPC.getPosX(), NPC.getPosY(), NPC.getPosZ(), isNew, NPC.getSkinName());
 
 		Main.getMain().getDataNPC().get(i).setOldName(NPC.getOldName());
 	}
@@ -127,9 +114,10 @@ public class NPCManager {
 		NPC NPC = Main.getMain().getDataNPC().get(Main.getMain().getNPC().indexOf(npc));
 
 		removeNPC(npc);
-		deleteNPC(npc);
+		if(!NPC.isNew())
+			deleteNPC(npc);
 
-		createNPC(NPC.getName(), namePlayerSkin, NPC.getWorld(), NPC.getPosX(), NPC.getPosY(), NPC.getPosZ(), false);
+		createNPC(NPC.getName(), namePlayerSkin, NPC.getWorld(), NPC.getPosX(), NPC.getPosY(), NPC.getPosZ(), NPC.isNew());
 	}
 
 	public static void deleteNPC(ServerPlayer npc) {

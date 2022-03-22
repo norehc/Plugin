@@ -1,14 +1,18 @@
 package fr.norehc.test.permission;
 
-import fr.norehc.test.gestion.unit.GradeUnit;
-import fr.norehc.test.gestion.unit.RankUnit;
-import fr.norehc.test.gestion.unit.RoleUnit;
-import fr.norehc.test.main.Main;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.permissions.PermissionAttachment;
 
-import java.sql.SQLException;
-import java.util.*;
+import fr.norehc.test.gestion.unit.GradeUnit;
+import fr.norehc.test.gestion.unit.RankUnit;
+import fr.norehc.test.main.Main;
 
 public class PermissionManager {
     private Map<RankUnit, List<Permission>> rankPermission = new HashMap<>();

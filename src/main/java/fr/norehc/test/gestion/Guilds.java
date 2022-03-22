@@ -1,16 +1,14 @@
 package fr.norehc.test.gestion;
 
+import fr.norehc.test.gestion.unit.RoleUnit;
+import fr.norehc.test.main.Main;
+import org.bukkit.entity.Player;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.bukkit.entity.Player;
-
-import fr.norehc.test.gestion.unit.RoleUnit;
-import fr.norehc.test.main.Main;
 
 public class Guilds {
 

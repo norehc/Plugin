@@ -1,17 +1,16 @@
 package fr.norehc.test.gestion;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
+
+import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachment;
 
 import fr.norehc.test.gestion.unit.GradeUnit;
 import fr.norehc.test.gestion.unit.RankUnit;
 import fr.norehc.test.main.Main;
 import fr.norehc.test.permission.Permission;
-import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachment;
 
 public class Account extends AbstractData {
 	

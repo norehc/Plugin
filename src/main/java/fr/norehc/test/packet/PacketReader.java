@@ -1,5 +1,15 @@
 package fr.norehc.test.packet;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
+import org.bukkit.entity.Player;
+
 import fr.norehc.test.event.RightClickEvent;
 import fr.norehc.test.main.Main;
 import io.netty.channel.Channel;
@@ -8,16 +18,6 @@ import io.netty.handler.codec.MessageToMessageDecoder;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.server.level.ServerPlayer;
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
-import org.bukkit.entity.Player;
-
-import java.lang.reflect.Field;
-import java.net.ServerSocket;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class PacketReader {
 

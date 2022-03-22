@@ -15,7 +15,6 @@ public class GuildCommand implements CommandExecutor {
 	
 	Main main = Main.getMain();
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		

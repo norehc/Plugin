@@ -13,5 +13,4 @@ public class CommandsManager {
 		main.getCommand("guild").setExecutor(new GuildCommand());
 		main.getCommand("listGuild").setExecutor(new ListGuild());
 	}
-
 }

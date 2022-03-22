@@ -3,7 +3,6 @@ package fr.norehc.test.gestion;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -107,12 +106,12 @@ public class GestionInv {
         return item;
     }
 
-    public static ItemStack newSkullItem(String playerName) {
+    @SuppressWarnings("deprecation")
+	public static ItemStack newSkullItem(String playerName) {
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         meta.setOwningPlayer(Bukkit.getOfflinePlayer(playerName));
         item.setItemMeta(meta);
         return item;
     }
-
 }

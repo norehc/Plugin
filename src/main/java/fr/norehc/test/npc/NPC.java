@@ -1,7 +1,5 @@
 package fr.norehc.test.npc;
 
-import jline.internal.Nullable;
-
 public class NPC {
     private double posX, posY, posZ;
     private String name, world, skin, signature, oldName, function, skinName;

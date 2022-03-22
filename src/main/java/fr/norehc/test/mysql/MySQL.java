@@ -56,6 +56,7 @@ public class MySQL {
                 "name varchar(255)," +
                 "world varchar(255)," +
                 "skin varchar(1023)," +
+                "skinName varchar(255)," +
                 "signature varchar(1023)," +
                 "function varchar(255))"
                 );

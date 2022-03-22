@@ -1,10 +1,5 @@
 package fr.norehc.test.listenner.inventory;
 
-import fr.norehc.test.gestion.GestionInv;
-import fr.norehc.test.main.Main;
-import fr.norehc.test.npc.NPC;
-import fr.norehc.test.npc.NPCManager;
-import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,6 +8,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import fr.norehc.test.gestion.GestionInv;
+import fr.norehc.test.main.Main;
+import fr.norehc.test.npc.NPCManager;
+import net.minecraft.server.level.ServerPlayer;
 
 public class InventoryClickNPC  implements Listener {
 
@@ -26,10 +26,6 @@ public class InventoryClickNPC  implements Listener {
         if(e.getView().getTitle().contains("§4admin acces")) {
             e.setCancelled(true);
             String npcName = e.getView().getTitle().split(":")[1].split("§")[0].replace(" ", "");
-
-            NPC dataNPC = Main.getMain().getDataNPC().stream().filter(npc -> {
-                return npc.getName().equals(npcName);
-            }).findFirst().get();
 
             ServerPlayer npc = Main.getMain().getNPC().stream().filter(npcs -> {
                 return npcs.getName().toString().contains(npcName);
