@@ -23,22 +23,34 @@ public class PlayerCommandChat implements Listener {
 
                 ServerPlayer npc = Main.getMain().getWaitingChatMessageNPC().get(Main.getMain().getWaitingChatMessagePlayer().indexOf(player));
 
-                NPC NPC = Main.getMain().getDataNPC().get(Main.getMain().getNPC().indexOf(npc));
-
-                final boolean[] isNew = new boolean[1];
-
-                Main.getMain().getDataNPC().stream().forEach(npc1 -> {
-                    if(npc1.getName().equals(newName)) {
-                        if(npc1.exist()) {
-                            player.sendMessage("§4Ce nom est déjà pris !");
-                        }else {
-                            isNew[0] = npc1.isNew();
-                            NPCManager.deleteNPC(Main.getMain().getNPC().get(Main.getMain().getDataNPC().indexOf(npc1)));
-                        }
+                NPC NPC = Main.getMain().getDataNPCs().entrySet().stream().filter(entry -> {
+                    if(entry.getValue() == npc) {
+                        return true;
                     }
+                    return false;
+                }).findFirst().get().getKey();
+
+                final boolean[] exist = {false};
+                final boolean[] isNew = {true};
+
+                Main.getMain().getDataNPCs().entrySet().forEach(entry -> {
+                        if(entry.getKey().getName().equals(newName)) {
+                            if(entry.getKey().exist()) {
+                                player.sendMessage("§4Ce nom est déjà pris !");
+                                exist[0] = true;
+                            }else {
+                                isNew[0] = entry.getKey().isNew();
+                                NPCManager.deleteNPC(entry.getValue());
+                            }
+                        }
                 });
 
-                NPCManager.updateNameNPC(npc, newName, isNew[0]);
+                if(exist[0] == false) {
+                    NPCManager.updateNameNPC(npc, newName, isNew[0] && NPC.isNew());
+                    player.sendMessage("§2Vous avez changé le nom du NPC");
+                }else {
+                    player.sendMessage("§4Vous n'avez pas changé le nom du NPC");
+                }
 
                 int i = Main.getMain().getWaitingChatMessagePlayer().indexOf(player);
 
@@ -46,7 +58,6 @@ public class PlayerCommandChat implements Listener {
                 Main.getMain().getWaitingChatMessageNPC().remove(i);
                 Main.getMain().getWaitingChatMessageAction().remove(i);
 
-                player.sendMessage("§2Vous avez changé le nom du NPC");
             }else if(action.equals("skin")) {
                 e.setCancelled(true);
                 String newSkin = e.getMessage();

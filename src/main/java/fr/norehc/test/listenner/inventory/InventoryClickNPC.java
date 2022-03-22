@@ -27,7 +27,7 @@ public class InventoryClickNPC  implements Listener {
             e.setCancelled(true);
             String npcName = e.getView().getTitle().split(":")[1].split("§")[0].replace(" ", "");
 
-            ServerPlayer npc = Main.getMain().getNPC().stream().filter(npcs -> {
+            ServerPlayer npc = Main.getMain().getDataNPCs().values().stream().filter(npcs -> {
                 return npcs.getName().toString().contains(npcName);
             }).findFirst().get();
 
@@ -72,7 +72,7 @@ public class InventoryClickNPC  implements Listener {
                 String npcName = e.getView().getTitle().split(":")[1].replace(" ", "");
 
                 player.closeInventory();
-                NPCManager.removeNPC(Main.getMain().getNPC().stream().filter(npcs -> {
+                NPCManager.removeNPC(Main.getMain().getDataNPCs().values().stream().filter(npcs -> {
                     return npcs.getName().toString().contains(npcName);
                 }).findFirst().get());
                 player.sendMessage("§2Vous avez supprimé le NPC");

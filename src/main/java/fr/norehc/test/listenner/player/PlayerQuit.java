@@ -20,7 +20,7 @@ public class PlayerQuit implements Listener {
 		
 		Main.getMain().getTablist().refresh();
 
-		Main.getMain().getNPC().stream().forEach(npc -> {
+		Main.getMain().getDataNPCs().values().forEach(npc -> {
 			ServerGamePacketListenerImpl connection = ((CraftPlayer) p).getHandle().connection;
 
 			connection.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.REMOVE_PLAYER, npc));

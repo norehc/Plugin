@@ -21,26 +21,30 @@ public class NPCClick implements Listener {
     public void onClick(RightClickEvent e) {
         Player player = e.getPlayer();
         ServerPlayer npc = e.getNPC();
-        player.sendMessage("Hi");
 
-        NPC npc1 = Main.getMain().getDataNPC().get(Main.getMain().getNPC().indexOf(npc));
+        NPC NPC = Main.getMain().getDataNPCs().entrySet().stream().filter(entry -> {
+            if(entry.getValue() == npc) {
+                return true;
+            }
+            return false;
+        }).findFirst().get().getKey();
 
-        if(npc1.getFunction().equalsIgnoreCase("none") && !player.hasPermission("succes.npcAdmin")) return;
+        if(NPC.getFunction().equalsIgnoreCase("none") && !player.hasPermission("succes.npcAdmin")) return;
 
         if(player.hasPermission("succes.npcAdmin")) {
-            if(npc1.getFunction().equalsIgnoreCase("none")) {
+            if(NPC.getFunction().equalsIgnoreCase("none")) {
                 /*
                 slot 10 à 16 libre
                 Change name npc
                 Change function npc
                 Remove npc
                  */
-                Inventory inventory = Bukkit.createInventory(null, 27, "§7NPC : " + npc1.getName() + " §4admin access");
+                Inventory inventory = Bukkit.createInventory(null, 27, "§7NPC : " + NPC.getName() + " §4admin access");
                 inventory = GestionInv.createInventory(27, inventory, GestionInv.newItem(Material.GRAY_STAINED_GLASS_PANE, 1, " "));
 
-                inventory.setItem(10, GestionInv.newItem(Material.NAME_TAG, 1, "§8Changer le nom du NPC", Arrays.asList("§7Nom actuel : " + npc1.getName())));
-                inventory.setItem(12, GestionInv.newItem(GestionInv.newSkullItem(npc1.getName()), "§8Changer le skin du NPC", Arrays.asList("§7Skin actuel : " + npc1.getSkinName())));
-                inventory.setItem(14, GestionInv.newItem(Material.BOOK, 1, "§8Changer la fonction du NPC", Arrays.asList("§7Fonction actuel : " + npc1.getFunction())));
+                inventory.setItem(10, GestionInv.newItem(Material.NAME_TAG, 1, "§8Changer le nom du NPC", Arrays.asList("§7Nom actuel : " + NPC.getName())));
+                inventory.setItem(12, GestionInv.newItem(GestionInv.newSkullItem(NPC.getSkinName()), "§8Changer le skin du NPC", Arrays.asList("§7Skin actuel : " + NPC.getSkinName())));
+                inventory.setItem(14, GestionInv.newItem(Material.BOOK, 1, "§8Changer la fonction du NPC", Arrays.asList("§7Fonction actuel : " + NPC.getFunction())));
                 inventory.setItem(16, GestionInv.newItem(Material.BARRIER, 1, "§4Supprimer le NPC"));
 
                 player.openInventory(inventory);

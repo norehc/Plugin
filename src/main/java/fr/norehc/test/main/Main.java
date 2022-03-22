@@ -1,15 +1,5 @@
 package fr.norehc.test.main;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.commons.dbcp2.BasicDataSource;
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import fr.norehc.test.command.CommandsManager;
 import fr.norehc.test.gestion.Account;
 import fr.norehc.test.gestion.BanManager;
@@ -27,6 +17,13 @@ import fr.norehc.test.tablist.Tablist;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.*;
 
 public class Main extends JavaPlugin {
 	
@@ -45,8 +42,7 @@ public class Main extends JavaPlugin {
 	
 	public BanManager bm;
 
-	private List<ServerPlayer> NPC = new ArrayList<>();
-	private List<NPC> dataNPC = new ArrayList<>();
+	private Map<NPC, ServerPlayer> dataNPCs = new HashMap<>();
 
 	private PermissionManager permissionManager = new PermissionManager();
 
@@ -91,7 +87,7 @@ public class Main extends JavaPlugin {
 				for(Player player : Bukkit.getOnlinePlayers()) {
 		   			tablist.setTab(player);
 					ServerGamePacketListenerImpl connection = ((CraftPlayer) player).getHandle().connection;
-					NPC.stream().forEach(npc -> {
+					dataNPCs.values().forEach(npc -> {
 						connection.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.REMOVE_PLAYER, npc));
 					});
 		   		}
@@ -164,12 +160,8 @@ public class Main extends JavaPlugin {
     	return teams.stream().filter(t -> t.getGrade() == grade && t.getRank() == rank).findFirst();
     }
 
-	public List<ServerPlayer> getNPC() {
-		return NPC;
-	}
-
-	public List<NPC> getDataNPC() {
-		return dataNPC;
+	public Map<NPC, ServerPlayer> getDataNPCs() {
+		return dataNPCs;
 	}
     
     public Tablist getTablist() {

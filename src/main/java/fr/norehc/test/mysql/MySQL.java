@@ -58,7 +58,7 @@ public class MySQL {
                 "skin varchar(1023)," +
                 "skinName varchar(255)," +
                 "signature varchar(1023)," +
-                "function varchar(255))"
+                "`function` varchar(255))"
                 );
         update("CREATE TABLE IF NOT EXISTS permissions(" +
                 "`index` INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +

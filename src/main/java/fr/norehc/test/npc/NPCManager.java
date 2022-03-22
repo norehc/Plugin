@@ -64,11 +64,11 @@ public class NPCManager {
 		execute(gameProfile, (CraftWorld) Bukkit.getWorld(world), posX, posY, posZ, isNew, skinName);
 	}
 	
-	private static int execute(GameProfile gameProfile, CraftWorld world, double posX, double posY, double posZ, boolean isNew, String skinName) {
+	private static void execute(GameProfile gameProfile, CraftWorld world, double posX, double posY, double posZ, boolean isNew, String skinName) {
 		
 		ServerPlayer npc = new ServerPlayer(((CraftServer)Bukkit.getServer()).getServer(), world.getHandle(), gameProfile);
 		npc.setPos(posX, posY, posZ);
-		
+
 		for(Player on : Bukkit.getOnlinePlayers()) {
 			ServerGamePacketListenerImpl connection = ((CraftPlayer)on).getHandle().connection;
 			
@@ -76,10 +76,8 @@ public class NPCManager {
 			
 			connection.send(new ClientboundAddPlayerPacket(npc));
 		}
-		
-		Main.getMain().getNPC().add(npc);
-		Main.getMain().getDataNPC().add(new NPC(posX, posY, posZ, gameProfile.getName(), world.getName(), ((Property) gameProfile.getProperties().get("textures").toArray()[0]).getValue(), ((Property) gameProfile.getProperties().get("textures").toArray()[0]).getSignature(), isNew, "none", skinName));
-		return Main.getMain().getNPC().indexOf(npc);
+
+		Main.getMain().getDataNPCs().put(new NPC(posX, posY, posZ, gameProfile.getName(), world.getName(), ((Property) gameProfile.getProperties().get("textures").toArray()[0]).getValue(), ((Property) gameProfile.getProperties().get("textures").toArray()[0]).getSignature(), isNew, "none", skinName), npc);
 	}
 
 	public static void removeNPC(ServerPlayer npc) {
@@ -87,42 +85,66 @@ public class NPCManager {
 			ServerGamePacketListenerImpl connection = ((CraftPlayer) player).getHandle().connection;
 			connection.send(new ClientboundRemoveEntitiesPacket(npc.getId()));
 		}
-		NPC npc1 = Main.getMain().getDataNPC().get(Main.getMain().getNPC().indexOf(npc));;
-		if(npc1.isNew()) {
-			Main.getMain().getDataNPC().remove(npc1);
-			Main.getMain().getNPC().remove(npc);
+
+		NPC NPC = Main.getMain().getDataNPCs().entrySet().stream().filter(entry -> {
+			if(entry.getValue() == npc) return true;
+			return false;
+		}).findFirst().get().getKey();
+		if(NPC.isNew()) {
+			Main.getMain().getDataNPCs().remove(NPC, npc);
 		}else {
-			Main.getMain().getDataNPC().get(Main.getMain().getNPC().indexOf(npc)).delete();
+			Main.getMain().getDataNPCs().entrySet().stream().filter(entry -> {
+				if(entry.getValue() == npc) return true;
+				return false;
+			}).findFirst().get().getKey().delete();
 		}
 	}
 
 	//Ajouter le fait que le nom peut-etre deja pris et aussi la suppression du NPC doit etre modifier en fonction des variables du NPC
 	public static void updateNameNPC(ServerPlayer npc, String name, boolean isNew) {
-		NPC NPC = Main.getMain().getDataNPC().get(Main.getMain().getNPC().indexOf(npc));
+		NPC NPC = Main.getMain().getDataNPCs().entrySet().stream().filter(entry -> {
+			if(entry.getValue() == npc) return true;
+			return false;
+		}).findFirst().get().getKey();
 
-		removeNPC(npc);
+		System.out.println(isNew);
+
+		deleteNPC(npc);
 
 		GameProfile gameProfile = new GameProfile(npc.getUUID(), name);
 		gameProfile.getProperties().put("textures", new Property("textures", NPC.getSkin(), NPC.getSignatures()));
 
-		int i = execute(gameProfile, (CraftWorld) Bukkit.getWorld(NPC.getWorld()), NPC.getPosX(), NPC.getPosY(), NPC.getPosZ(), isNew, NPC.getSkinName());
+		execute(gameProfile, (CraftWorld) Bukkit.getWorld(NPC.getWorld()), NPC.getPosX(), NPC.getPosY(), NPC.getPosZ(), isNew, NPC.getSkinName());
 
-		Main.getMain().getDataNPC().get(i).setOldName(NPC.getOldName());
+		Main.getMain().getDataNPCs().entrySet().forEach(entry -> {
+			if(entry.getKey().getName().equals(name) && entry.getKey().exist()) {
+				entry.getKey().setOldName(NPC.getOldName());
+			}
+		});
 	}
 
 	public static void updateSkinNPC(ServerPlayer npc, String namePlayerSkin) {
-		NPC NPC = Main.getMain().getDataNPC().get(Main.getMain().getNPC().indexOf(npc));
+		NPC NPC = Main.getMain().getDataNPCs().entrySet().stream().filter(entry -> {
+			if(entry.getValue() == npc) return true;
+			return false;
+		}).findFirst().get().getKey();
 
-		removeNPC(npc);
-		if(!NPC.isNew())
-			deleteNPC(npc);
+		deleteNPC(npc);
 
 		createNPC(NPC.getName(), namePlayerSkin, NPC.getWorld(), NPC.getPosX(), NPC.getPosY(), NPC.getPosZ(), NPC.isNew());
 	}
 
 	public static void deleteNPC(ServerPlayer npc) {
-		Main.getMain().getDataNPC().remove(Main.getMain().getDataNPC().get(Main.getMain().getNPC().indexOf(npc)));
-		Main.getMain().getNPC().remove(npc);
+		//NPC NPC = Main.getMain().getDataNPC().get(Main.getMain().getNPC().indexOf(npc));
+		for(Player player : Bukkit.getOnlinePlayers()) {
+			ServerGamePacketListenerImpl connection = ((CraftPlayer) player).getHandle().connection;
+			connection.send(new ClientboundRemoveEntitiesPacket(npc.getId()));
+		}
+		Main.getMain().getDataNPCs().remove(Main.getMain().getDataNPCs().entrySet().stream().filter(entry -> {
+			if(entry.getValue() == npc) return true;
+			return false;
+		}).findFirst().get().getKey());
+		//Main.getMain().getMySQL().update(String.format("DELETE FROM npcs WHERE name='%s'", NPC.getOldName()));
 	}
 
 	private static GameProfile sendSetNPCSkinPacket(String username, GameProfile gameProfile) { // The username is the name for the player that has the skin.

@@ -30,13 +30,13 @@ public class PlayerJoin implements Listener {
 		
 		main.getTablist().refresh();
 
-		main.getNPC().stream().forEach(npc -> {
-			if(main.getDataNPC().get(main.getNPC().indexOf(npc)).exist()) {
+		main.getDataNPCs().entrySet().forEach(entry -> {
+			if(entry.getKey().exist()) {
 				ServerGamePacketListenerImpl connection = ((CraftPlayer) p).getHandle().connection;
 
-				connection.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER, npc));
+				connection.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER, entry.getValue()));
 
-				connection.send(new ClientboundAddPlayerPacket(npc));
+				connection.send(new ClientboundAddPlayerPacket(entry.getValue()));
 			}
 		});
 

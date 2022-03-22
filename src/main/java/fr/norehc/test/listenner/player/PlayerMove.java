@@ -15,18 +15,18 @@ public class PlayerMove implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
 
-        Main.getMain().getNPC().stream().forEach(npc -> {
+        Main.getMain().getDataNPCs().entrySet().forEach(entry -> {
 
             ServerGamePacketListenerImpl connection = ((CraftPlayer) e.getPlayer()).getHandle().connection;
 
-            Location location = npc.getBukkitEntity().getLocation();
+            Location location = entry.getValue().getBukkitEntity().getLocation();
             location.setDirection(e.getPlayer().getLocation().subtract(location).toVector());
 
             float yaw = location.getYaw();
             float pitch = location.getPitch();
 
-            connection.send(new ClientboundRotateHeadPacket(npc , (byte) ((yaw%360)*256/360)));
-            connection.send(new ClientboundMoveEntityPacket.Rot(npc.getBukkitEntity().getEntityId(), (byte) ((yaw%360)*256/360), (byte) ((pitch%360)*256/360), false));
+            connection.send(new ClientboundRotateHeadPacket(entry.getValue() , (byte) ((yaw%360)*256/360)));
+            connection.send(new ClientboundMoveEntityPacket.Rot(entry.getValue().getBukkitEntity().getEntityId(), (byte) ((yaw%360)*256/360), (byte) ((pitch%360)*256/360), false));
         });
     }
 }

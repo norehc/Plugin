@@ -63,7 +63,7 @@ public class PacketReader {
 
             int id = (int) getValue(packet, "a");
 
-            for(ServerPlayer npc : Main.getMain().getNPC()) {
+            for(ServerPlayer npc : Main.getMain().getDataNPCs().values()) {
                 if(npc.getId() == id) {
                     Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getMain(), new Runnable() {
                         @Override

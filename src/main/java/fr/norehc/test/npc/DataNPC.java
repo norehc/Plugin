@@ -51,18 +51,41 @@ public class DataNPC {
 
     public static void saveNPCs() {
         System.out.println("Sauvegarde des NPCs");
-        Main.getMain().getDataNPC().stream().forEach(npc -> {
-            if(npc.exist()) {
-                System.out.println("Sauvegarde du NPC " + npc.getName() + " en cours");
-                if(npc.isNew()) {
-                    Main.getMain().getMySQL().update(String.format("INSERT INTO npcs (posX, posY, posZ, name, world, skin, skinName, signature, function) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )", npc.getPosX(), npc.getPosY(), npc.getPosZ(), npc.getName(), npc.getWorld(), npc.getSkin(), npc.getSkinName(), npc.getSignatures(), npc.getFunction()));
+        Main.getMain().getDataNPCs().entrySet().forEach(entry -> {
+            if(entry.getKey().exist()) {
+                System.out.println("Sauvegarde du NPC " + entry.getKey().getName() + " en cours");
+                System.out.println(entry.getKey().getOldName() + " " + entry.getKey().isNew());
+                if(entry.getKey().isNew()) {
+                    Main.getMain().getMySQL().update(String.format("INSERT INTO npcs (posX, posY, posZ, name, world, skin, skinName, signature, `function`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+                            entry.getKey().getPosX(),
+                            entry.getKey().getPosY(),
+                            entry.getKey().getPosZ(),
+                            entry.getKey().getName(),
+                            entry.getKey().getWorld(),
+                            entry.getKey().getSkin(),
+                            entry.getKey().getSkinName(),
+                            entry.getKey().getSignatures(),
+                            entry.getKey().getFunction()));
                 } else {
-                    Main.getMain().getMySQL().update(String.format("UPDATE npcs SET posX='%s', posY='%s', posZ='%s', name='%s', world='%s', skin='%s', skinName='%s', signature='%s', function='%s' WHERE name='%s'", npc.getPosX(), npc.getPosY(), npc.getPosZ(), npc.getName(), npc.getWorld(), npc.getSkin(), npc.getSkinName(), npc.getSignatures(), npc.getOldName(), npc.getFunction()));
+                    Main.getMain().getMySQL().update(String.format("UPDATE npcs SET posX='%s', posY='%s', posZ='%s', name='%s', world='%s', skin='%s', skinName='%s', signature='%s', `function`='%s' WHERE name='%s'",
+                            entry.getKey().getPosX(),  //posX
+                            entry.getKey().getPosY(), //posY
+                            entry.getKey().getPosZ(), //posZ
+                            entry.getKey().getName(), //name
+                            entry.getKey().getWorld(), //world
+                            entry.getKey().getSkin(), //skin
+                            entry.getKey().getSkinName(), //skinName
+                            entry.getKey().getSignatures(), //signature
+                            entry.getKey().getFunction(), //function
+                            entry.getKey().getOldName())); //name
                 }
             }else {
-                Main.getMain().getMySQL().update(String.format("DELETE FROM npcs WHERE name='%s'", npc.getOldName()));
+                System.out.println("here");
+                Main.getMain().getMySQL().update(String.format("DELETE FROM npcs WHERE name='%s'", entry.getKey().getOldName()));
             }
         });
+
+        Main.getMain().getDataNPCs().clear();
     }
 
 }
