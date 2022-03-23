@@ -119,6 +119,7 @@ public class NPCManager {
 		Main.getMain().getDataNPCs().entrySet().forEach(entry -> {
 			if(entry.getKey().getName().equals(name) && entry.getKey().exist()) {
 				entry.getKey().setOldName(NPC.getOldName());
+				entry.getKey().setFunction(NPC.getFunction());
 			}
 		});
 	}
@@ -132,6 +133,12 @@ public class NPCManager {
 		deleteNPC(npc);
 
 		createNPC(NPC.getName(), namePlayerSkin, NPC.getWorld(), NPC.getPosX(), NPC.getPosY(), NPC.getPosZ(), NPC.isNew());
+
+		Main.getMain().getDataNPCs().entrySet().forEach(entry -> {
+			if(entry.getKey().getName().equals(NPC.getName()) && entry.getKey().exist()) {
+				entry.getKey().setFunction(NPC.getFunction());
+			}
+		});
 	}
 
 	public static void deleteNPC(ServerPlayer npc) {
@@ -144,7 +151,6 @@ public class NPCManager {
 			if(entry.getValue() == npc) return true;
 			return false;
 		}).findFirst().get().getKey());
-		//Main.getMain().getMySQL().update(String.format("DELETE FROM npcs WHERE name='%s'", NPC.getOldName()));
 	}
 
 	private static GameProfile sendSetNPCSkinPacket(String username, GameProfile gameProfile) { // The username is the name for the player that has the skin.

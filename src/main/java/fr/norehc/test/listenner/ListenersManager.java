@@ -1,5 +1,6 @@
 package fr.norehc.test.listenner;
 
+import fr.norehc.test.listenner.inventory.InventoryClickGlobalGuild;
 import fr.norehc.test.listenner.inventory.InventoryClickNPC;
 import fr.norehc.test.listenner.npc.NPCClick;
 import fr.norehc.test.listenner.player.*;
@@ -26,6 +27,7 @@ public class ListenersManager {
 		pm.registerEvents(new NPCClick(), main);
 
 		pm.registerEvents(new InventoryClickNPC(), main);
+		pm.registerEvents(new InventoryClickGlobalGuild(), main);
 
 		pm.registerEvents(new BreakAction(), main);
 		pm.registerEvents(new PlaceAction(), main);
