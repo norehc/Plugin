@@ -5,55 +5,48 @@ import fr.norehc.test.main.Main;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Guilds {
 
 	private Main main = Main.getMain();
-	
-	private List<Guild> guilds = new ArrayList<>();
-	
-	private List<String> guildsName = new ArrayList<>();
+
+	private Map<String, Guild> guildsMap = new HashMap<>();
 	
 	public Guilds() {
-		guildsName = getNameOfGuildFromMySQL();
+		List<String> guildsName = getNameOfGuildFromMySQL();
 		for(String guildName : guildsName) {
-			guilds.add(new Guild(guildName));
+			guildsMap.put(guildName, new Guild(guildName));
 		}
 	}
 	
 	public void onLogout() {
-		guilds.forEach(dg -> {
-			dg.saveGuild();
+		guildsMap.entrySet().forEach(entry -> {
+			entry.getValue().saveGuild();
 		});
 	}
 	
 	public void addGuild(String name, String prefix, Player playerLeader) {
 		Map<Player, RoleUnit> playerMember = new HashMap<>();
 		playerMember.put(playerLeader, RoleUnit.getHighestRole());
-		
-		guildsName.add(name);
-		guilds.add(new Guild(name, prefix, 0, playerMember));
+
+		guildsMap.put(name, new Guild(name, prefix, 0, playerMember));
 	}
 	
 	public void removeGuild(String name) {
-		guilds.forEach(dg -> {
-			if(dg.getName() == name) {
-				guildsName.remove(name);
-				if(dg.isNew()) {
-					guilds.remove(dg);
+		guildsMap.entrySet().forEach(entry -> {
+			if(entry.getValue().getName().equals(name)) {
+				if(entry.getValue().isNew()) {
+					guildsMap.remove(name);
 				}else {
-					dg.deleteGuild();
+					entry.getValue().deleteGuild();
 				}
 			}
 		});
 	}
 	
 	public Guild getGuild(String name) {
-		for(Guild guild : guilds) {
+		for(Guild guild : guildsMap.values()) {
 			if(guild.getName() == name && guild.stillExist()) {
 				return guild;
 			}
@@ -63,7 +56,7 @@ public class Guilds {
 	}
 	
 	public List<Guild> getGuilds() {
-		return guilds;
+		return new ArrayList<>(guildsMap.values());
 	}
 	
 	private List<String> getNameOfGuildFromMySQL() {
@@ -82,6 +75,18 @@ public class Guilds {
 	}
 	
 	public List<String> getGuildsName() {
-		return guildsName;
+		return new ArrayList<>(guildsMap.keySet());
+	}
+
+	public boolean isInGuild(Player player) {
+		return guildsMap.entrySet().stream().filter(entry -> {
+			return entry.getValue().isInGuild(player);
+		}).findFirst().isPresent();
+	}
+
+	public Guild getPlayerGuild(Player player) {
+		return guildsMap.entrySet().stream().filter(entry -> {
+			return entry.getValue().isInGuild(player);
+		}).findFirst().get().getValue();
 	}
 }

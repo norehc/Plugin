@@ -1,5 +1,7 @@
 package fr.norehc.test.gestion;
 
+import fr.norehc.test.gestion.unit.RoleUnit;
+import fr.norehc.test.main.Main;
 import fr.norehc.test.npc.NPC;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -147,6 +149,15 @@ public class GestionInv {
 
         if(player.hasPermission("succes.npcAdmin")) {
             inventory.setItem(inventory.getSize()-1, GestionInv.newItem(GestionInv.newSkullItem(NPC.getSkinName()), "§4Acces a l'interface admin", Arrays.asList("")));
+        }
+        if(Main.getMain().getGuilds().isInGuild(player)) {
+            if(Main.getMain().getGuilds().getPlayerGuild(player).getPlayerRole(player) == RoleUnit.getHighestRole()) {
+                //Objet pour la gestion de guild
+            }else {
+                //Objet pour voir les parametres de la guilde
+            }
+        }else {
+            //Objet pour créer une guilde
         }
         return inventory;
     }

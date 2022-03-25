@@ -171,6 +171,12 @@ public class Guild {
 		
 		return players;
 	}
+
+	public boolean isInGuild(Player player) {
+		return dataPlayersGuild.stream().filter(dataPlayerGuild -> {
+			return dataPlayerGuild.getPlayer() == player;
+		}).findFirst().isPresent();
+	}
 	
 	public List<Player> getPlayersFromRole(RoleUnit role) {
 		List<Player> players = new ArrayList<>();
@@ -180,7 +186,17 @@ public class Guild {
 		}
 		
 		return players;
-	}	
+	}
+
+	public RoleUnit getPlayerRole(Player player) {
+		for(DataPlayerGuild data : dataPlayersGuild) {
+			if(data.getPlayer() == player) {
+				return data.getRole();
+			}
+		}
+
+		return RoleUnit.getLowestRole();
+	}
 	
 	
 	public boolean stillExist() {
