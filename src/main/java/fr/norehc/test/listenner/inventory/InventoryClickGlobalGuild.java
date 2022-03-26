@@ -13,7 +13,6 @@ public class InventoryClickGlobalGuild implements Listener {
 
     @EventHandler
     public void onClickInventoryGlobalGuild(InventoryClickEvent e) {
-
         if(e.getCurrentItem() == null) return;
 
         Player player = (Player) e.getWhoClicked();

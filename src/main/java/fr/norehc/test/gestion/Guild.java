@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 import java.util.*;
-import java.util.Map.Entry;
 
 public class Guild {
 	
@@ -28,7 +27,7 @@ public class Guild {
 		money = Integer.parseInt(data[1]);
 		newGuild = false;
 		
-		for(Entry<Player, RoleUnit> entry : getDataGuildPlayerFromMySQL().entrySet()) {
+		for(Map.Entry<Player, RoleUnit> entry : getDataGuildPlayerFromMySQL().entrySet()) {
 			addNewPlayer(entry.getKey(), entry.getValue());
 		}
 	}
@@ -40,7 +39,7 @@ public class Guild {
 		this.money = money;
 		newGuild = true;
 		
-		for(Entry<Player, RoleUnit> entry : playerMember.entrySet()) {
+		for(Map.Entry<Player, RoleUnit> entry : playerMember.entrySet()) {
 			addNewPlayer(entry.getKey(), entry.getValue());
 		}
 	}		
