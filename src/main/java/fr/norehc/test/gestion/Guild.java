@@ -28,7 +28,7 @@ public class Guild {
 		newGuild = false;
 		
 		for(Map.Entry<Player, RoleUnit> entry : getDataGuildPlayerFromMySQL().entrySet()) {
-			addNewPlayer(entry.getKey(), entry.getValue());
+			addNewPlayer(entry.getKey(), entry.getValue(), false);
 		}
 	}
 	
@@ -40,13 +40,13 @@ public class Guild {
 		newGuild = true;
 		
 		for(Map.Entry<Player, RoleUnit> entry : playerMember.entrySet()) {
-			addNewPlayer(entry.getKey(), entry.getValue());
+			addNewPlayer(entry.getKey(), entry.getValue(), true);
 		}
-	}		
+	}
 	
-	public void addNewPlayer(Player player, RoleUnit role) {
+	public void addNewPlayer(Player player, RoleUnit role, boolean newPlayer) {
 		DataPlayerGuild temp = new DataPlayerGuild(player.getUniqueId());
-		temp.setPlayer(player, role);
+		temp.setPlayer(player, role, newPlayer);
 		dataPlayersGuild.add(temp);
 	}
 	
@@ -70,10 +70,11 @@ public class Guild {
 	}
 	
 	public void saveGuild() {
-		sendDataToMySQL();
+		setDataGuildToMySQL();
+		setDataGuildPlayerToMySQL();
 	}
 	
-	private void sendDataToMySQL() {
+	private void setDataGuildToMySQL() {
 		if(exist) {
 			if(newGuild) {
 				main.getMySQL().update(String.format("INSERT INTO guild (nameGuild, prefixGuild, moneyGuild) VALUES ('%s', '%s', '%s')", name, prefix, money));
@@ -85,6 +86,24 @@ public class Guild {
 				main.getMySQL().update(String.format("DELETE FROM guild WHERE nameGuild='%s'", name));
 			}
 		}
+	}
+
+	private void setDataGuildPlayerToMySQL() {
+		dataPlayersGuild.forEach(dataPlayerGuild -> {
+			if(exist) {
+				if(dataPlayerGuild.isNewPlayer()) {
+					main.getMySQL().update(String.format("INSERT INTO guildPlayer (nameGuild, UUID, role) VALUES ('%s', '%s', '%s')", name, dataPlayerGuild.getUUID(), dataPlayerGuild.getRole().getName()));
+				}else if(dataPlayerGuild.isPresent()) {
+					main.getMySQL().update(String.format("UPDATE guildPlayer SET nameGuild='%s', UUID='%s', role='%s' WHERE UUID='%s'", name, dataPlayerGuild.getUUID(), dataPlayerGuild.getRole().getName(), dataPlayerGuild.getUUID()));
+				}else {
+					main.getMySQL().update(String.format("DELETE FROM guildPlayer WHERE UUID='%s' AND nameGuild='%s'", dataPlayerGuild.getUUID(), name));
+				}
+			}else {
+				if(!dataPlayerGuild.isNewPlayer()) {
+					main.getMySQL().update(String.format("DELETE FROM guildPlayer WHERE UUID='%s' AND nameGuild='%s'", dataPlayerGuild.getUUID(), name));
+				}
+			}
+		});
 	}
 	
 	private String[] getDataGuildFromMySQL() {

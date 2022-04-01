@@ -1,13 +1,8 @@
 package fr.norehc.test.listenner.npc;
 
-import java.util.Arrays;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.Inventory;
 
 import fr.norehc.test.event.RightClickEvent;
 import fr.norehc.test.gestion.GestionInv;

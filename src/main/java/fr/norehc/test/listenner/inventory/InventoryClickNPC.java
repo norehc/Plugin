@@ -15,6 +15,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class InventoryClickNPC  implements Listener {
 
@@ -92,7 +94,6 @@ public class InventoryClickNPC  implements Listener {
             e.setCancelled(true);
             String npcName = e.getView().getTitle().split(":")[1].replace(" ", "");
             if(e.getCurrentItem().getType() == Material.WHITE_BANNER) {
-
                 player.closeInventory();
 
                 Main.getMain().getDataNPCs().entrySet().stream().filter(entry ->  {
@@ -101,6 +102,22 @@ public class InventoryClickNPC  implements Listener {
 
                 player.sendMessage("§4Vous avez changé la fonctionnalité du NPC il est désormé en gestion des guildes");
 
+            }else if(e.getCurrentItem().getType() == Material.GOLD_INGOT) {
+                player.closeInventory();
+
+                Main.getMain().getDataNPCs().entrySet().stream().filter(entry ->  {
+                    return entry.getKey().getName().equals(npcName);
+                }).findFirst().get().getKey().setFunction("playerBank");
+
+                player.sendMessage("§4Vous avez changé la fonctionnalité du NPC il est désormé en gestion de l'argent des joueurs");
+            }else if(e.getCurrentItem().getType() == Material.GOLD_BLOCK) {
+                player.closeInventory();
+
+                Main.getMain().getDataNPCs().entrySet().stream().filter(entry ->  {
+                    return entry.getKey().getName().equals(npcName);
+                }).findFirst().get().getKey().setFunction("guildBank");
+
+                player.sendMessage("§4Vous avez changé la fonctionnalité du NPC il est désormé en gestion de l'argent d'une guilde");
             }else if(e.getCurrentItem().getType() == Material.BARRIER) {
 
                 player.closeInventory();
@@ -138,15 +155,30 @@ public class InventoryClickNPC  implements Listener {
         Inventory inventory = Bukkit.createInventory(null, 27, "§6Choisisser la nouvelle fonction du NPC : " + npc.getName());
 
         ItemStack grayGlass = GestionInv.newItem(Material.GRAY_STAINED_GLASS_PANE, 1, " ");
-        ItemStack banner = GestionInv.newItem(Material.WHITE_BANNER, 1, "§7Devenir un NPC en gestion des guildes", Arrays.asList("§6En choisissant cette fonction le NPC", "§6pourra désormer gérer les guildes", "§6en ayant les fonctions de base"));
-        ItemStack barrer = GestionInv.newItem(Material.BARRIER, 1, "§7Enlever la fonction du NPC", Arrays.asList("Enleve la fonction du NPC (setup to none)"));
+
+        ItemStack barrer = GestionInv.newItem(Material.BARRIER, 1, "§7Enlever la fonction du NPC", Arrays.asList("§6Enleve la fonction du NPC (setup to none)"));
 
         inventory = GestionInv.createInventory(27, inventory, grayGlass);
 
-        if(npc.getFunction().equals("globalGuild")){
-            inventory.setItem(10, barrer);
-        }else {
-            inventory.setItem(10, banner);
+        Map<String, ItemStack> items = new HashMap<>();
+
+        items.put("globalGuild",
+                GestionInv.newItem(Material.WHITE_BANNER, 1, "§7Devenir un NPC en gestion des guildes", Arrays.asList("§6En choisissant cette fonction le NPC", "§6pourra désormer gérer les guildes", "§6en ayant les fonctions de base")));
+        items.put("playerBank",
+                GestionInv.newItem(Material.GOLD_INGOT, 1, "§7Devenir un NPC en gestion de l'argent des joueurs", Arrays.asList("§6En choisissant cette fonction le NPC", "§6pourra désomer gérer l'argent des joueurs")));
+        items.put("guildBank",
+                GestionInv.newItem(Material.GOLD_BLOCK, 1, "§7Devenir un NPC en gestion de l'argent d'une guilde", Arrays.asList("§6En choisissant cette fonction le NPC", "§6pourra désomer gérer l'argent d'une guilde")));
+
+        int j = 10; //First place of an item
+        //inventory.getSize()-18-((inventory.getSize()/9)-2)*2;
+        //Place per page
+        int max = (7*inventory.getSize())/9 - 22;
+        for(int i = 0; i < items.size(); i++) {
+            if(npc.getFunction().equals(items.keySet().toArray()[i])) {
+                inventory.setItem(j, barrer);
+            }else {
+                inventory.setItem(j, items.get(items.keySet().toArray()[i]));
+            }
         }
 
         player.openInventory(inventory);

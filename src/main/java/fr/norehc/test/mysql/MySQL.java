@@ -71,31 +71,37 @@ public class MySQL {
         	Connection c = getConnection();
             PreparedStatement s = c.prepareStatement(qry);
             s.executeUpdate();
+            s.close();
+            c.close();
         } catch(Exception e){
             e.printStackTrace();
         }
     }
 	
 	public Object query(String qry, Function<ResultSet, Object> consumer){
+        ResultSet rs = null;
+
         try {
         	Connection c = getConnection();
             PreparedStatement s = c.prepareStatement(qry);
-            ResultSet rs = s.executeQuery();
-            return consumer.apply(rs);
+            rs = s.executeQuery();
         } catch(SQLException e){
             throw new IllegalStateException(e.getMessage());
         }
+        return consumer.apply(rs);
     }
  
     public void query(String qry, Consumer<ResultSet> consumer){
+        ResultSet rs = null;
+
         try {
         	Connection c = getConnection();
         	PreparedStatement s = c.prepareStatement(qry);
-            ResultSet rs = s.executeQuery();
-            consumer.accept(rs);
+            rs = s.executeQuery();
         } catch(SQLException e){
             throw new IllegalStateException(e.getMessage());
         }
+        consumer.accept(rs);
     }
 	
 }

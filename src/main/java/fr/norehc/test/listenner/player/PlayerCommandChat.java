@@ -1,17 +1,21 @@
 package fr.norehc.test.listenner.player;
 
-import fr.norehc.test.main.Main;
-import fr.norehc.test.npc.NPC;
-import fr.norehc.test.npc.NPCManager;
-import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 
+import fr.norehc.test.main.Main;
+import fr.norehc.test.npc.NPC;
+import fr.norehc.test.npc.NPCManager;
+import net.minecraft.server.level.ServerPlayer;
+
+import java.net.ServerSocket;
+
+@SuppressWarnings("deprecation")
 public class PlayerCommandChat implements Listener {
 
-    @EventHandler
+	@EventHandler
     public void onChat(PlayerChatEvent e) {
         Player player = e.getPlayer();
 
@@ -73,6 +77,19 @@ public class PlayerCommandChat implements Listener {
                 Main.getMain().getWaitingChatMessageAction().remove(i);
 
                 player.sendMessage("§2Vous avez changé le skin du NPC ");
+            }else if(action.equals("guildName")) {
+                e.setCancelled(true);
+                String guildName = e.getMessage();
+
+                Main.getMain().getGuilds().addGuild(guildName, guildName, player);
+
+                int i = Main.getMain().getWaitingChatMessagePlayer().indexOf(player);
+
+                Main.getMain().getWaitingChatMessagePlayer().remove(i);
+                Main.getMain().getWaitingChatMessageNPC().remove(i);
+                Main.getMain().getWaitingChatMessageAction().remove(i);
+
+                player.sendMessage("Vous avez choisi comme nom de guild : " + guildName);
             }
 
         }

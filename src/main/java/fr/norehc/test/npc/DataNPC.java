@@ -43,7 +43,7 @@ public class DataNPC {
         if(posX.isEmpty()) return;
 
         for(int i = 0; i < posX.size(); i++) {
-            NPCManager.createNPC(name.get(i), world.get(i), posX.get(i), posY.get(i), posZ.get(i), skin.get(i), skinName.get(i), signature.get(i), false);
+            NPCManager.createNPC(name.get(i), world.get(i), posX.get(i), posY.get(i), posZ.get(i), skin.get(i), skinName.get(i), signature.get(i), false, function.get(i));
         }
 
         System.out.println("Fin du chargement des NPCs");

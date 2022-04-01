@@ -153,11 +153,13 @@ public class GestionInv {
         if(Main.getMain().getGuilds().isInGuild(player)) {
             if(Main.getMain().getGuilds().getPlayerGuild(player).getPlayerRole(player) == RoleUnit.getHighestRole()) {
                 //Objet pour la gestion de guild
+                inventory.setItem(16, GestionInv.newItem(Material.BARRIER, 1, "§4Supprimer la guilde", Arrays.asList("§6En cliquant dessus vous pourrez supprimer votre guilde")));
             }else {
                 //Objet pour voir les parametres de la guilde
             }
         }else {
             //Objet pour créer une guilde
+            inventory.setItem(10, GestionInv.newItem(Material.WHITE_BANNER, 1, "§6Créer une guilde", Arrays.asList("§6Créer une guilde pour vous et vos amis", "§6Pour réaliser cette action il vous faudra : §e1 000§6D")));
         }
         return inventory;
     }

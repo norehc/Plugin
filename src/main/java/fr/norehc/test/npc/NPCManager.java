@@ -33,51 +33,51 @@ public class NPCManager {
 
 		System.out.println(((CraftWorld) player.getWorld()).getHandle());
 
-		execute(gameProfile, (CraftWorld)player.getWorld(), player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), true, player.getName());
+		execute(gameProfile, (CraftWorld)player.getWorld(), player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), true, player.getName(), "none");
 	}
 
 	public static void createNPC(Player player, String name, String namePlayerTexture) {
 		GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
 		gameProfile = sendSetNPCSkinPacket(namePlayerTexture, gameProfile);
 
-		execute(gameProfile, (CraftWorld) player.getWorld(), player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), true, namePlayerTexture);
+		execute(gameProfile, (CraftWorld) player.getWorld(), player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), true, namePlayerTexture, "none");
 	}
 
 	public static void createNPC(String name, String namePlayerTexture, String world, double posX, double posY, double posZ) {
 		GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
 		gameProfile = sendSetNPCSkinPacket(namePlayerTexture, gameProfile);
 
-		execute(gameProfile, (CraftWorld) Bukkit.getWorld(world), posX, posY, posZ, true, namePlayerTexture);
+		execute(gameProfile, (CraftWorld) Bukkit.getWorld(world), posX, posY, posZ, true, namePlayerTexture, "none");
 	}
 
 	public static void createNPC(String name, String namePlayerTexture, String world, double posX, double posY, double posZ, boolean isNew) {
 		GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
 		gameProfile = sendSetNPCSkinPacket(namePlayerTexture, gameProfile);
 
-		execute(gameProfile, (CraftWorld) Bukkit.getWorld(world), posX, posY, posZ, isNew, namePlayerTexture);
+		execute(gameProfile, (CraftWorld) Bukkit.getWorld(world), posX, posY, posZ, isNew, namePlayerTexture, "none");
 	}
 
-	public static void createNPC(String name, String world, double posX, double posY, double posZ, String skin, String skinName, String signature, boolean isNew) {
+	public static void createNPC(String name, String world, double posX, double posY, double posZ, String skin, String skinName, String signature, boolean isNew, String function) {
 		GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
 		gameProfile.getProperties().put("textures", new Property("textures", skin, signature));
 
-		execute(gameProfile, (CraftWorld) Bukkit.getWorld(world), posX, posY, posZ, isNew, skinName);
+		execute(gameProfile, (CraftWorld) Bukkit.getWorld(world), posX, posY, posZ, isNew, skinName, function);
 	}
 	
-	private static void execute(GameProfile gameProfile, CraftWorld world, double posX, double posY, double posZ, boolean isNew, String skinName) {
+	private static void execute(GameProfile gameProfile, CraftWorld world, double posX, double posY, double posZ, boolean isNew, String skinName, String function) {
 		
 		ServerPlayer npc = new ServerPlayer(((CraftServer)Bukkit.getServer()).getServer(), world.getHandle(), gameProfile);
 		npc.setPos(posX, posY, posZ);
 
-		for(Player on : Bukkit.getOnlinePlayers()) {
-			ServerGamePacketListenerImpl connection = ((CraftPlayer)on).getHandle().connection;
+		for(Player player : Bukkit.getOnlinePlayers()) {
+			ServerGamePacketListenerImpl connection = ((CraftPlayer)player).getHandle().connection;
 			
 			connection.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER, npc));
 			
 			connection.send(new ClientboundAddPlayerPacket(npc));
 		}
 
-		Main.getMain().getDataNPCs().put(new NPC(posX, posY, posZ, gameProfile.getName(), world.getName(), ((Property) gameProfile.getProperties().get("textures").toArray()[0]).getValue(), ((Property) gameProfile.getProperties().get("textures").toArray()[0]).getSignature(), isNew, "none", skinName), npc);
+		Main.getMain().getDataNPCs().put(new NPC(posX, posY, posZ, gameProfile.getName(), world.getName(), ((Property) gameProfile.getProperties().get("textures").toArray()[0]).getValue(), ((Property) gameProfile.getProperties().get("textures").toArray()[0]).getSignature(), isNew, function, skinName), npc);
 	}
 
 	public static void removeNPC(ServerPlayer npc) {
@@ -114,12 +114,11 @@ public class NPCManager {
 		GameProfile gameProfile = new GameProfile(npc.getUUID(), name);
 		gameProfile.getProperties().put("textures", new Property("textures", NPC.getSkin(), NPC.getSignatures()));
 
-		execute(gameProfile, (CraftWorld) Bukkit.getWorld(NPC.getWorld()), NPC.getPosX(), NPC.getPosY(), NPC.getPosZ(), isNew, NPC.getSkinName());
+		execute(gameProfile, (CraftWorld) Bukkit.getWorld(NPC.getWorld()), NPC.getPosX(), NPC.getPosY(), NPC.getPosZ(), isNew, NPC.getSkinName(), NPC.getFunction());
 
 		Main.getMain().getDataNPCs().entrySet().forEach(entry -> {
 			if(entry.getKey().getName().equals(name) && entry.getKey().exist()) {
 				entry.getKey().setOldName(NPC.getOldName());
-				entry.getKey().setFunction(NPC.getFunction());
 			}
 		});
 	}
