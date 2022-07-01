@@ -1,7 +1,9 @@
 package fr.norehc.test.listenner.player;
 
+import fr.norehc.test.gestion.Account;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 
@@ -11,11 +13,12 @@ import fr.norehc.test.npc.NPCManager;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.net.ServerSocket;
+import java.util.Optional;
 
 @SuppressWarnings("deprecation")
 public class PlayerCommandChat implements Listener {
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
     public void onChat(PlayerChatEvent e) {
         Player player = e.getPlayer();
 
@@ -90,8 +93,69 @@ public class PlayerCommandChat implements Listener {
                 Main.getMain().getWaitingChatMessageAction().remove(i);
 
                 player.sendMessage("Vous avez choisi comme nom de guild : " + guildName);
-            }
+            }else if(action.equals("giveMoneyPlayer")) {
+                e.setCancelled(true);
+                String namePlayer = e.getMessage();
 
+                if(!Main.getMain().getAccounts().stream().filter(a -> {
+                    return a.getName().equals(namePlayer);
+                }).findFirst().isPresent()) {
+                    player.sendMessage("§4Le joueur n'est pas connecté, veuillez attendre sa connexion pour lui donner de l'argent !");
+                    return;
+                }
+
+                int i = Main.getMain().getWaitingChatMessagePlayer().indexOf(player);
+
+                Main.getMain().getWaitingChatMessageAction().set(i, "giveMoneyPlayerNumber");
+
+                Main.getMain().getWaitingChatMessageMoneyPlayer().remove(player);
+
+                Main.getMain().getWaitingChatMessageMoneyPlayer().put(player, namePlayer);
+
+                player.sendMessage("§5Veuillez renseigner la quantité voulu !");
+            }else if(action.equals("giveMonePlayerNumber")) {
+                e.setCancelled(true);
+
+                int money;
+
+                try {
+                    money = Integer.parseInt(e.getMessage());
+                }catch (NumberFormatException numberFormatException) {
+                    player.sendMessage("Vous n'avez pas entré un nombre entier");
+                    return;
+                }
+
+                Account accountGiver = Main.getMain().getAccount(player).get();
+
+                if(!accountGiver.getDataMoney().hasBankMoney(money)) {
+                    player.sendMessage("Vous n'avez pas l'argent nécessaire pour faire ce transfert !");
+                    return;
+                }
+
+                String receiveNamePlayer = Main.getMain().getWaitingChatMessageMoneyPlayer().get(player);
+
+                Optional<Account> accountOptional = Main.getMain().getAccounts().stream().filter(a -> {
+                    return a.getName().equals(receiveNamePlayer);
+                }).findFirst();
+
+                if(!accountOptional.isPresent()) {
+                    player.sendMessage("Le joueur s'est déconnecté entre-temps");
+                }
+
+                Account accountReceiver = accountOptional.get();
+
+                accountGiver.getDataMoney().subBankMoney(money);
+                accountReceiver.getDataMoney().addBankMoney(money);
+
+                Main.getMain().getWaitingChatMessageMoneyPlayer().remove(player);
+
+                int i = Main.getMain().getWaitingChatMessagePlayer().indexOf(player);
+
+                Main.getMain().getWaitingChatMessagePlayer().remove(i);
+                Main.getMain().getWaitingChatMessageNPC().remove(i);
+                Main.getMain().getWaitingChatMessageAction().remove(i);
+
+            }
         }
     }
 }

@@ -31,7 +31,8 @@ public class MySQL {
                 "grade VARCHAR(255), " +
                 "grade_end BIGINT, " +
                 "`rank` varchar(255), " +
-                "money BIGINT)");
+                "money BIGINT," +
+                "bankMoney BIGINT)");
         update("CREATE TABLE IF NOT EXISTS ban (" +
                 "`index` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
                 "UUID VARCHAR(255), " +

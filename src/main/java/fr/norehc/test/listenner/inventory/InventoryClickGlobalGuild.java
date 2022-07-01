@@ -1,9 +1,9 @@
 package fr.norehc.test.listenner.inventory;
 
 import fr.norehc.test.gestion.GestionInv;
+import fr.norehc.test.enums.InventoryNameEnums;
 import fr.norehc.test.main.Main;
 import fr.norehc.test.npc.NPC;
-import fr.norehc.test.npc.NPCManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -21,7 +21,7 @@ public class InventoryClickGlobalGuild implements Listener {
 
         Player player = (Player) e.getWhoClicked();
 
-        if(e.getView().getTitle().contains("§6Interface de gestion de guilde")) {
+        if(e.getView().getTitle().contains(InventoryNameEnums.GLOBALGUILD.getTitle())) {
             e.setCancelled(true);
 
             String npcName = e.getView().getTitle().split(":")[0].split("-")[1].replace(" ", "");
@@ -30,7 +30,7 @@ public class InventoryClickGlobalGuild implements Listener {
                 return entry.getKey().getName().toString().equals(npcName);
             }).findFirst().get().getKey();
 
-            if(e.getCurrentItem().getType() == Material.PLAYER_HEAD && e.getCurrentItem().getItemMeta().getDisplayName().equals("§4Acces a l'interface admin")) {
+            if(e.getCurrentItem().getType() == Material.PLAYER_HEAD && e.getCurrentItem().getItemMeta().getDisplayName().equals(InventoryNameEnums.ACCESADMIN.getTitle())) {
                 player.openInventory(GestionInv.adminInventory(npc, true));
             }else if(e.getCurrentItem().getType() == Material.WHITE_BANNER) {
                 player.closeInventory();

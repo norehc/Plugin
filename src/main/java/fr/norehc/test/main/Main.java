@@ -49,6 +49,8 @@ public class Main extends JavaPlugin {
 	private List<Player> waitingChatMessagePlayer = new ArrayList<>();
 	private List<ServerPlayer> waitingChatMessageNPC = new ArrayList<>();
 	private List<String> waitingChatMessageAction = new ArrayList<>();
+
+	private Map<Player, String> waitingChatMessageMoneyPlayer = new HashMap<>();
 	
 	
 	@Override
@@ -186,5 +188,9 @@ public class Main extends JavaPlugin {
 
 	public List<String> getWaitingChatMessageAction() {
 		return waitingChatMessageAction;
+	}
+
+	public Map<Player, String> getWaitingChatMessageMoneyPlayer() {
+		return waitingChatMessageMoneyPlayer;
 	}
 }

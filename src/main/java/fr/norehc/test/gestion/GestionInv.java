@@ -1,5 +1,6 @@
 package fr.norehc.test.gestion;
 
+import fr.norehc.test.enums.InventoryNameEnums;
 import fr.norehc.test.gestion.unit.RoleUnit;
 import fr.norehc.test.main.Main;
 import fr.norehc.test.npc.NPC;
@@ -18,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GestionInv {
-
 
     //Create an inventory with item in argument around the inventory.
     public static Inventory createInventory(int numberOfSlot, Inventory inventory, ItemStack itemStack) {
@@ -116,6 +116,7 @@ public class GestionInv {
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         meta.setOwningPlayer(Bukkit.getOfflinePlayer(playerName));
+        meta.setDisplayName("§e" + playerName);
         item.setItemMeta(meta);
         return item;
     }
@@ -128,7 +129,7 @@ public class GestionInv {
         Change function npc
         Remove npc
         */
-        Inventory inventory = Bukkit.createInventory(null, 27, "§7NPC : " + npc.getName() + " §4admin access");
+        Inventory inventory = Bukkit.createInventory(null, 27, "§7NPC : " + npc.getName() + " " + InventoryNameEnums.ADMIN);
         inventory = createInventory(27, inventory, newItem(Material.GRAY_STAINED_GLASS_PANE, 1, " "));
 
         inventory.setItem(10, newItem(Material.NAME_TAG, 1, "§8Changer le nom du NPC", Arrays.asList("§7Nom actuel : " + npc.getName())));
@@ -144,11 +145,11 @@ public class GestionInv {
     }
 
     public static Inventory globalGuildInventory(Player player, NPC NPC) {
-        Inventory inventory = Bukkit.createInventory(null, 27, "§7-" + NPC.getName() + " : §6Interface de gestion de guilde");
+        Inventory inventory = Bukkit.createInventory(null, 27, "§7-" + NPC.getName() + " : " + InventoryNameEnums.GLOBALGUILD.getTitle());
         inventory = GestionInv.createInventory(27, inventory, GestionInv.newItem(Material.GRAY_STAINED_GLASS_PANE, 1, " "));
 
         if(player.hasPermission("succes.npcAdmin")) {
-            inventory.setItem(inventory.getSize()-1, GestionInv.newItem(GestionInv.newSkullItem(NPC.getSkinName()), "§4Acces a l'interface admin", Arrays.asList("")));
+            inventory.setItem(inventory.getSize()-1, GestionInv.newItem(GestionInv.newSkullItem(NPC.getSkinName()), InventoryNameEnums.ACCESADMIN.getTitle(), Arrays.asList("")));
         }
         if(Main.getMain().getGuilds().isInGuild(player)) {
             if(Main.getMain().getGuilds().getPlayerGuild(player).getPlayerRole(player) == RoleUnit.getHighestRole()) {
@@ -161,6 +162,22 @@ public class GestionInv {
             //Objet pour créer une guilde
             inventory.setItem(10, GestionInv.newItem(Material.WHITE_BANNER, 1, "§6Créer une guilde", Arrays.asList("§6Créer une guilde pour vous et vos amis", "§6Pour réaliser cette action il vous faudra : §e1 000§6D")));
         }
+        return inventory;
+    }
+
+    public static Inventory playerBank(Player player, NPC NPC) {
+        Inventory inventory = Bukkit.createInventory(null, 27, "§7-" + NPC.getName() + " : " + InventoryNameEnums.PLAYERBANK.getTitle());
+        inventory = GestionInv.createInventory(27, inventory, GestionInv.newItem(Material.GRAY_STAINED_GLASS_PANE, 1, " "));
+        if(player.hasPermission("succes.npcAdmin")) {
+            inventory.setItem(inventory.getSize()-1, GestionInv.newItem(GestionInv.newSkullItem(NPC.getSkinName()), InventoryNameEnums.ACCESADMIN.getTitle(), Arrays.asList("")));
+        }
+
+        Account account = Main.getMain().getAccount(player).get();
+
+        inventory.setItem(10, GestionInv.newItem(Material.GOLD_INGOT, 1, "§6Votre argent :", Arrays.asList("\t" + account.getDataMoney().getMoney() + " §6D")));
+        inventory.setItem(11, GestionInv.newItem(Material.EMERALD, 1, "§2Donner de l'argent à une personne"));
+
+
         return inventory;
     }
 }

@@ -174,7 +174,7 @@ public class Guild {
 	
 	public Player getLeader() {
 		Optional<DataPlayerGuild> data = dataPlayersGuild.stream().filter(p -> p.getRole() == RoleUnit.getHighestRole()).findFirst();
-		if(!data.isEmpty()) {
+		if(!data.isPresent()) {
 			return data.get().getPlayer();
 		}
 

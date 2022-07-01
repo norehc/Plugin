@@ -34,6 +34,10 @@ public class NPCClick implements Listener {
 
         if(NPC.getFunction().equalsIgnoreCase("globalGuild")) {
             player.openInventory(GestionInv.globalGuildInventory(player, NPC));
+        }else if(NPC.getFunction().equalsIgnoreCase("playerBank")) {
+
+        }else if(NPC.getFunction().equalsIgnoreCase("guildBank")) {
+
         }
     }
 }

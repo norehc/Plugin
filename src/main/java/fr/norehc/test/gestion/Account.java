@@ -31,7 +31,7 @@ public class Account extends AbstractData {
 	}
 	
 	private String[] getDataFromMySQL() {
-		String[] data = new String[4];
+		String[] data = new String[5];
 		
 		main.getMySQL().query(String.format("SELECT * FROM player WHERE uuid='%s'", getUUID()), rs-> {
 			try {
@@ -40,6 +40,7 @@ public class Account extends AbstractData {
 					data[1] = rs.getString("grade_end");
 					data[2] = rs.getString("rank");
 					data[3] = rs.getString("money");
+					data[4] = rs.getString("bankMoney");
 				} else {
 					newPlayer = true;
 				}
@@ -53,9 +54,9 @@ public class Account extends AbstractData {
 	
 	private void sendDataToMySQL() {
 		if(newPlayer) {
-			main.getMySQL().update(String.format("INSERT INTO player (name, UUID, grade, grade_end, money, rank) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')", getName(), getUUID(), dataGrade.getGrade().getName(), dataGrade.getEnd(), dataMoney.getMoney(), dataRank.getRank().getName()));
+			main.getMySQL().update(String.format("INSERT INTO player (name, UUID, grade, grade_end, money, rank, bankMoney) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')", getName(), getUUID(), dataGrade.getGrade().getName(), dataGrade.getEnd(), dataMoney.getMoney(), dataRank.getRank().getName(), dataMoney.getBankMoney()));
 		} else {
-			main.getMySQL().update(String.format("UPDATE player SET name='%s', grade='%s', grade_end='%s', money='%s', rank='%s' WHERE UUID='%s'", getName(), dataGrade.getGrade().getName(), dataGrade.getEnd(), dataMoney.getMoney(), dataRank.getRank().getName(), getUUID()));
+			main.getMySQL().update(String.format("UPDATE player SET name='%s', grade='%s', grade_end='%s', money='%s', rank='%s', bankMoney='%s' WHERE UUID='%s'", getName(), dataGrade.getGrade().getName(), dataGrade.getEnd(), dataMoney.getMoney(), dataRank.getRank().getName(), dataMoney.getBankMoney(), getUUID()));
 		}
 	}
 	
@@ -68,10 +69,12 @@ public class Account extends AbstractData {
 			dataGrade.setGrade(GradeUnit.getLowestGrade());
 			dataRank.setRank(RankUnit.getLowestRank());
 			dataMoney.setMoney(0);
+			dataMoney.setBankMoney(0);
 		}else {
 			dataGrade.setGrade(GradeUnit.getByName(data[0]), Long.parseLong(data[1]));
 			dataRank.setRank(RankUnit.getByName(data[2]));
 			dataMoney.setMoney(Long.parseLong(data[3]));
+			dataMoney.setBankMoney(Long.parseLong(data[4]));
 		}
 
 		List<Permission> rankPermission = main.getPermissionManager().getRankPermissions(dataRank.getRank());

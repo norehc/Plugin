@@ -108,7 +108,6 @@ public class BanPlayer {
 				(heures > 0 ? heures + " " + TimeUnit.HEURE.getName() + " " : "") + 
 				(minutes > 0 ? minutes + " " + TimeUnit.MINUTE.getName() + " " : "") + 
 				(secondes > 0 ? secondes + " " + TimeUnit.SECONDE.getName() + " " : "");
-		
 	}
 	
 	public String getReason() {		

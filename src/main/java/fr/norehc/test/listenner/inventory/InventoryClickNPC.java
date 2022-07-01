@@ -1,6 +1,7 @@
 package fr.norehc.test.listenner.inventory;
 
 import fr.norehc.test.gestion.GestionInv;
+import fr.norehc.test.enums.InventoryNameEnums;
 import fr.norehc.test.main.Main;
 import fr.norehc.test.npc.NPC;
 import fr.norehc.test.npc.NPCManager;
@@ -27,7 +28,7 @@ public class InventoryClickNPC  implements Listener {
 
         Player player = (Player) e.getWhoClicked();
 
-        if(e.getView().getTitle().contains("§4admin acces")) {
+        if(e.getView().getTitle().contains(InventoryNameEnums.ADMIN.getTitle())) {
             e.setCancelled(true);
             String npcName = e.getView().getTitle().split(":")[1].split("§")[0].replace(" ", "");
 

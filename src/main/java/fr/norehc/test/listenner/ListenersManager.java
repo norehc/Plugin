@@ -3,6 +3,7 @@ package fr.norehc.test.listenner;
 import fr.norehc.test.listenner.inventory.InventoryClickGlobalGuild;
 import fr.norehc.test.listenner.inventory.InventoryClickGuildBank;
 import fr.norehc.test.listenner.inventory.InventoryClickNPC;
+import fr.norehc.test.listenner.inventory.InventoryClickPlayerBank;
 import fr.norehc.test.listenner.npc.NPCClick;
 import fr.norehc.test.listenner.player.*;
 import org.bukkit.Bukkit;
@@ -29,6 +30,8 @@ public class ListenersManager {
 
 		pm.registerEvents(new InventoryClickNPC(), main);
 		pm.registerEvents(new InventoryClickGlobalGuild(), main);
+		pm.registerEvents(new InventoryClickPlayerBank(), main);
+		pm.registerEvents(new InventoryClickGuildBank(), main);
 
 
 		pm.registerEvents(new BreakAction(), main);
