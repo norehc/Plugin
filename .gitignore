@@ -1,1 +1,5 @@
 **/target/
+**/bundler/
+**/logs/
+eula.txt
+server.properties
